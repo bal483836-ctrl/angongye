@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+	<!-- 处理springMVC的配置 -->
+	<!-- 自动扫描控制器  改 -->
+	<context:component-scan base-package="com.angongye.controller" />
+
+	<!-- 配置视图解析器 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀，斜杠代表根目录 /斜杠 代表根目录 -->
+		<property name="prefix" value="/"></property>
+		<!-- 后缀，文件的扩展名 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!-- 需要对文件上传进行文件配置 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" /><!-- 设置上传总文件的大小 -->
+		<property name="maxInMemorySize" value="4096" /> <!-- 设置上传单个文件的大小 -->
+		<property name="defaultEncoding" value="UTF-8"></property><!-- 设置上传文件的字符集 -->
+	</bean>
+
+	<!-- 处理中文乱码	 -->
+		<mvc:annotation-driven>
+			<mvc:message-converters>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<constructor-arg value="UTF-8" />
+				</bean>
+			</mvc:message-converters>
+		</mvc:annotation-driven>
+</beans>           

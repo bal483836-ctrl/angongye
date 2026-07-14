@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.angongye.mapper.EmpMapper">
+<!-- 动态sql ：sql拼接查询功能 -->
+<!-- if: 只要符合条件就拼接sql语句
+test="" 条件 比较的属性值-->
+ <select id="getEmpByCondition" parameterType="Emp" resultType="Emp">
+     select * from t_emp where 1=1
+     <if test="empName != null">
+         and emp_name like concat('%' ,#{empName},'%')
+     </if>
+     <if test="empEducation != null">
+         and emp_education=#{empEducation}
+     </if>
+     <if test="empEmail != null">
+         and emp_email like concat('%',#{empEmail},'%')
+     </if>
+ </select>
+
+<!--  where 标签：
+  （1） 加入where关键字
+  (2)去掉多余的连接关键字 and or
+
+
+  -->
+
+    <select id="getEmpByConditionWhere" parameterType="Emp" resultType="Emp">
+        select * from t_emp
+        <where>
+            <if test="empName != null">
+                and emp_name like concat('%' ,#{empName},'%')
+            </if>
+            <if test="empEducation != null">
+                and emp_education=#{empEducation}
+            </if>
+            <if test="empEmail != null">
+                and emp_email like concat('%',#{empEmail},'%')
+            </if>
+        </where>
+
+    </select>
+<!-- choose 的使用 -->
+    <select id="getEmpByChoose" parameterType="Emp" resultType="Emp">
+        select * from t_emp
+        <where>
+            <choose>
+                <when test="empName != null">
+                    and emp_name like concat('%' ,#{empName},'%')
+                </when>
+                <when test="empEducation != null">
+                    and emp_education=#{empEducation}
+                </when>
+                <when test="empEmail != null">
+                    and emp_email like concat('%',#{empEmail},'%')
+                </when>
+            </choose>
+        </where>
+    </select>
+
+<!--  set 用于动态修改的语句 update
+ set 标签的功能，删除多余逗号
+ -->
+    <update id="updateBySet" parameterType="Emp">
+        update t_emp
+        <set>
+            <if test="empName != null">
+                emp_name=#{empName} ,
+            </if>
+            <if test="empEducation != null">
+                emp_education=#{empEducation} ,
+            </if>
+            <if test="empEmail != null">
+                emp_email= #{empEmail} ,
+            </if>
+        </set>
+        <where>
+            <if test="empId != null">
+                and emp_id =#{empId}
+            </if>
+            <if test="empNo != null">
+                and emp_no=#{empNo}
+            </if>
+        </where>
+    </update>
+
+<!--  foreach 的 in查询 普通集合  -->
+    <select id="getEmpByForeach" parameterType="list" resultType="Emp">
+        select * from t_emp
+        <where>
+            emp_id in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+         </where>
+    </select>
+<!-- 对象集合 -->
+    <select id="getEmpByForeach2" parameterType="list" resultType="Emp">
+        select * from t_emp
+        <where>
+            emp_id in
+            <foreach collection="list" item="item" separator="," open="(" close=")">
+                #{item.empId}
+            </foreach>
+        </where>
+    </select>
+
+<!--  批量新增：通过excel表格，导入数据
+  -->
+    <insert id="batchInsert" parameterType="list">
+        insert into t_emp values
+        <foreach collection="list" separator="," item="item">
+            (#{item.empId}, #{item.empNo}, 'asaaa', 1, '女', '本科', 'aa@156.com', '111', '2026-05-28 14:08:03', '2026-05-25 09:48:51')
+        </foreach>
+    </insert>
+
+
+    <select id="getEmpByLoginId" parameterType="int" resultType="Emp">
+        select * from t_emp where emp_login_id = #{id}
+    </select>
+
+    <select id="getEmpNoLoginNo" resultType="Emp">
+        select * from t_emp where emp_login_id is null
+    </select>
+
+    <update id="updateLoginIdByEmpId" parameterType="Emp">
+        update t_emp set emp_login_id=#{empLoginId} where emp_id=#{empId}
+    </update>
+    <select id="getEmpsByDeptId" parameterType="int" resultType="Emp">
+        select * from t_emp where emp_dept_id=#{id}
+    </select>
+
+    <!-- ============ 员工管理 增删改查（第14章 员工管理模块）============ -->
+    <!-- 查询全部员工，左连接部门表，附带部门名称 deptName 用于页面展示 -->
+    <select id="getEmpAll" resultType="Emp">
+        select e.*, d.dept_name as deptName
+        from t_emp e
+        left join t_dept d on e.emp_dept_id = d.dept_id
+        order by e.emp_id
+    </select>
+
+    <!-- 通过主键查询员工（含部门名称） -->
+    <select id="getEmpById" parameterType="int" resultType="Emp">
+        select e.*, d.dept_name as deptName
+        from t_emp e
+        left join t_dept d on e.emp_dept_id = d.dept_id
+        where e.emp_id = #{id}
+    </select>
+
+    <!-- 通过员工编号查询（新增时校验编号唯一） -->
+    <select id="getEmpByNo" parameterType="string" resultType="Emp">
+        select * from t_emp where emp_no = #{value}
+    </select>
+
+    <!-- 新增员工：显式列出字段，创建时间由数据库当前时间填充 -->
+    <insert id="saveEmp" parameterType="Emp" useGeneratedKeys="true" keyProperty="empId" keyColumn="emp_id">
+        insert into t_emp
+            (emp_no, emp_name, emp_dept_id, emp_sex, emp_education, emp_email, emp_phone, emp_entry_time, emp_create_time)
+        values
+            (#{empNo}, #{empName}, #{empDeptId}, #{empSex}, #{empEducation}, #{empEmail}, #{empPhone}, #{empEntryTime}, now())
+    </insert>
+
+    <!-- 修改员工 -->
+    <update id="updateEmpById" parameterType="Emp">
+        update t_emp
+        set emp_no        = #{empNo},
+            emp_name      = #{empName},
+            emp_dept_id   = #{empDeptId},
+            emp_sex       = #{empSex},
+            emp_education = #{empEducation},
+            emp_email     = #{empEmail},
+            emp_phone     = #{empPhone},
+            emp_entry_time= #{empEntryTime}
+        where emp_id = #{empId}
+    </update>
+
+    <!-- 删除员工 -->
+    <delete id="deleteEmpById" parameterType="int">
+        delete from t_emp where emp_id = #{id}
+    </delete>
+
+    <!-- 修改时校验：除自身外是否存在相同的员工编号 -->
+    <select id="getEmpNoUnique" parameterType="Emp" resultType="Emp">
+        select * from t_emp where emp_id != #{empId} and emp_no = #{empNo}
+    </select>
+</mapper>

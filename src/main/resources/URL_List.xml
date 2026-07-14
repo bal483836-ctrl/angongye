@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+    <item>/login/register.do</item>
+    <item>/login/toRegister.do</item>
+    <item>/login/login.do</item>
+    <item>/login/captcha.do</item>
+</list>

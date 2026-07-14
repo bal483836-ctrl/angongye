@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <!-- 控制台输出器 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 1. 屏蔽Spring、MyBatis、JDBC、Tomcat所有DEBUG/INFO，只输出WARN/ERROR -->
+    <logger name="org.springframework" level="WARN" additivity="false"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <logger name="java.sql" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.mybatis.spring.transaction.SpringManagedTransaction" level="DEBUG"/>
+    <logger name="com.mysql" level="WARN"/>
+    <logger name="org.apache.ibatis" level="DEBUG"/>
+
+    <!-- 2. 自己的业务包（替换成你的项目根包名）可按需调INFO -->
+    <logger name="com.xxx" level="INFO"/>
+
+    <!-- 3. 根日志全局最低级别：WARN，所有未单独配置的包只打印警告及以上 -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
