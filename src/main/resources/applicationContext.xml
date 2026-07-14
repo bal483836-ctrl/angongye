@@ -42,8 +42,8 @@
    <!-- 使用代理对象，获得所有的Mapper -->
    <!-- 匿名bean对象 -->
 	 <bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-	      <!-- mapper接口的包名 改 -->
-	      <property name="basePackage" value="com.angongye.mapper"/>
+	      <!-- mapper接口的包名 改（同时扫描第14章新增的 dao 包，两者都作为 DAO 组件被 Spring 管理） -->
+	      <property name="basePackage" value="com.angongye.mapper,com.angongye.dao"/>
 	      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 	 </bean>
    <!-- 设置默认是数据库事务管理 -->

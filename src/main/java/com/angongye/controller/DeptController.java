@@ -2,7 +2,7 @@ package com.angongye.controller;
 
 import com.angongye.entity.Dept;
 import com.angongye.module.MyResponse;
-import com.angongye.service.DeptService;
+import com.angongye.service.HrmService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.List;
 public class DeptController {
 
     @Autowired
-    DeptService deptService;
+    HrmService hrmService;//业务逻辑门面组件，封装了各 DAO
 
     // /detp/list.do //后面还要加入数据分页效果
 //    @RequestMapping("/list")
@@ -50,7 +50,7 @@ public class DeptController {
         //给jsp文件提供数据
         PageHelper.startPage(pageNum,size);//配置分页内容，PageHelper.startPage(当前页是第几页, 每一页显示是记录数);
         //获得所有的内容，
-        List<Dept> all = deptService.getAll();
+        List<Dept> all = hrmService.findAllDept();
         //创建分页对象
         PageInfo<Dept> pageInfo = new PageInfo<>(all);
         pageInfo.getList();//获得分页的数据${page.list}
@@ -89,7 +89,7 @@ public class DeptController {
     public String detail(@RequestParam("id") int id,HttpServletRequest request){
         log.info("============DeptController==============detail===========");
         //通过Id到数据库中查询部门信息
-        Dept dept = deptService.getDeptById(id);
+        Dept dept = hrmService.findDeptById(id);
         request.setAttribute("dept",dept);
         return "dept/detail";
     }
@@ -102,7 +102,7 @@ public class DeptController {
         log.info("============DeptController===============add===============");
         //（部门编号唯一），如果该部门编号不存在，可以保存，保存数据
         //给业务处理这项工作
-        MyResponse save = deptService.save(dept);
+        MyResponse save = hrmService.addDept(dept);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf8");
@@ -126,7 +126,7 @@ public class DeptController {
         log.info("============DeptController===============deleteById===============");
         //（部门编号唯一），如果该部门编号不存在，可以保存，保存数据
         //给业务处理这项工作
-        MyResponse save = deptService.deleteById(id);
+        MyResponse save = hrmService.removeDept(id);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf8");
@@ -149,7 +149,7 @@ public class DeptController {
                              HttpServletRequest request){
         log.info("==============DeptController=============gotoModify==================");
         //通过id查找部门信息
-        Dept dept = deptService.getDeptById(id);
+        Dept dept = hrmService.findDeptById(id);
         request.setAttribute("dept",dept);//把数据放到request中，在页面中使用
         // 跳转到对应的页面上
         return "dept/modify";
@@ -161,7 +161,7 @@ public class DeptController {
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         log.info("============DeptController===============doModify===============");
-        MyResponse result = deptService.updateById2(dept);
+        MyResponse result = hrmService.modifyDept(dept);
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf8");

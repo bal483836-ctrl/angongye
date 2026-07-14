@@ -3,8 +3,7 @@ package com.angongye.controller;
 import com.angongye.entity.Dept;
 import com.angongye.entity.Emp;
 import com.angongye.module.MyResponse;
-import com.angongye.service.DeptService;
-import com.angongye.service.EmpService;
+import com.angongye.service.HrmService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +29,7 @@ import java.util.List;
 @Slf4j //日志记录，方便进行bug的跟踪
 public class EmpController {
     @Autowired
-    EmpService empService;
-    @Autowired
-    DeptService deptService;//用于在员工新增/修改页面提供部门下拉列表
+    HrmService hrmService;//业务逻辑门面组件，封装了 EmployeeDao、DeptDao
 
     /**
      * 解决表单中日期字符串（yyyy-MM-dd）无法自动绑定到 Emp 的 Date 属性的问题。
@@ -56,7 +53,7 @@ public class EmpController {
             HttpServletRequest request) {
         log.info("=============EmpController=============getList===========");
         PageHelper.startPage(pageNum, size);//配置分页
-        List<Emp> all = empService.getAllEmp();
+        List<Emp> all = hrmService.findAllEmployee();
         PageInfo<Emp> pageInfo = new PageInfo<>(all);
 
         //构建分页条（与部门管理保持一致的风格）
@@ -80,7 +77,7 @@ public class EmpController {
     @RequestMapping("/detail")
     public String detail(@RequestParam("id") int id, HttpServletRequest request) {
         log.info("============EmpController==============detail===========");
-        Emp emp = empService.getEmpDetail(id);
+        Emp emp = hrmService.findEmployeeById(id);
         request.setAttribute("emp", emp);
         return "emp/detail";
     }
@@ -89,7 +86,7 @@ public class EmpController {
     @RequestMapping("/gotoAdd")
     public String gotoAdd(HttpServletRequest request) {
         log.info("============EmpController==============gotoAdd===========");
-        List<Dept> deptList = deptService.getAll();
+        List<Dept> deptList = hrmService.findAllDept();
         request.setAttribute("deptList", deptList);
         return "emp/add";
     }
@@ -100,7 +97,7 @@ public class EmpController {
                     HttpServletRequest request,
                     HttpServletResponse response) throws IOException {
         log.info("============EmpController===============add===============");
-        MyResponse save = empService.save(emp);
+        MyResponse save = hrmService.addEmployee(emp);
         writeScript(response, save.getMsg());
     }
 
@@ -110,7 +107,7 @@ public class EmpController {
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         log.info("============EmpController===============deleteById===============");
-        MyResponse result = empService.deleteById(id);
+        MyResponse result = hrmService.removeEmployee(id);
         writeScript(response, result.getMsg());
     }
 
@@ -119,8 +116,8 @@ public class EmpController {
     public String gotoModify(@RequestParam("id") int id,
                              HttpServletRequest request) {
         log.info("==============EmpController=============gotoModify==================");
-        Emp emp = empService.getEmpDetail(id);
-        List<Dept> deptList = deptService.getAll();
+        Emp emp = hrmService.findEmployeeById(id);
+        List<Dept> deptList = hrmService.findAllDept();
         request.setAttribute("emp", emp);
         request.setAttribute("deptList", deptList);
         return "emp/modify";
@@ -132,7 +129,7 @@ public class EmpController {
                          HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         log.info("============EmpController===============doModify===============");
-        MyResponse result = empService.updateById(emp);
+        MyResponse result = hrmService.modifyEmployee(emp);
         writeScript(response, result.getMsg());
     }
 
