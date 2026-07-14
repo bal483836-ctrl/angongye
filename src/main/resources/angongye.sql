@@ -8,6 +8,9 @@
 --  运行后默认登录账号： zhangsan   密码： 123456
 -- =====================================================================
 
+-- 0. 强制本次导入使用 utf8mb4 客户端字符集，避免中文被按 latin1 误读导致乱码
+SET NAMES utf8mb4;
+
 -- 1. 创建数据库（与 db.properties 中 jdbc:mysql://localhost:3306/angongye 对应）
 CREATE DATABASE IF NOT EXISTS `angongye`
     DEFAULT CHARACTER SET utf8mb4
