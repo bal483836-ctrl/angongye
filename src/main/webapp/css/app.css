@@ -1,0 +1,179 @@
+@charset "UTF-8";
+/* ============================================================
+   app.css —— 全站现代化 UI 主题（覆盖旧样式，最后加载）
+   人事管理系统 · 第14章
+   ============================================================ */
+
+:root{
+    --primary:#4f6ef7;
+    --primary-dark:#3b53c4;
+    --primary-light:#eef1fe;
+    --ink:#1f2733;
+    --muted:#6b7280;
+    --line:#e6e8ef;
+    --bg:#eef1f7;
+    --card:#ffffff;
+    --danger:#ef4444;
+    --ok:#16a34a;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(31,41,55,.10);
+    --shadow-sm:0 2px 8px rgba(31,41,55,.08);
+}
+
+*{box-sizing:border-box;}
+body{
+    font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC","Hiragino Sans GB","Segoe UI",system-ui,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(135deg,#eef2ff 0%,#f6f8fc 40%,#eef1f7 100%);
+    margin:0;
+    -webkit-font-smoothing:antialiased;
+}
+a{color:var(--primary);text-decoration:none;transition:.15s;}
+a:link,a:visited{color:var(--primary);}
+a:hover{color:var(--primary-dark);}
+
+/* ============ 通用按钮 ============ */
+input[type=submit],input[type=reset],input[type=button],button{
+    border:none;cursor:pointer;border-radius:9px;
+    padding:9px 20px;font-size:14px;font-weight:600;transition:.18s;
+}
+input[type=submit]{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 6px 14px rgba(79,110,247,.35);}
+input[type=submit]:hover{filter:brightness(1.06);transform:translateY(-1px);}
+input[type=reset],input[type=button]{background:#eef1f6;color:#41495a;}
+input[type=reset]:hover,input[type=button]:hover{background:#e2e6ef;}
+
+/* ============ 通用输入框 ============ */
+input[type=text],input[type=password],input[type=date],input[type=email],select{
+    width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:9px;
+    font-size:14px;color:var(--ink);background:#fff;transition:.15s;outline:none;
+}
+input[type=text]:focus,input[type=password]:focus,input[type=date]:focus,select:focus{
+    border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,110,247,.15);
+}
+
+/* ============================================================
+   登录页 login.jsp
+   ============================================================ */
+#login{
+    width:410px;min-height:auto;height:auto;padding:0 34px 30px;
+    border:none;border-radius:18px;background:var(--card);
+    margin:8vh auto;box-shadow:var(--shadow);
+}
+#title{
+    width:auto;height:auto;line-height:1.3;padding:22px 0 18px;margin:0 -34px 6px;
+    border:none;border-radius:18px 18px 40px 40px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    letter-spacing:.28em;color:#fff;font-size:21px;font-weight:700;text-align:center;
+    box-shadow:0 8px 20px rgba(79,110,247,.30);
+}
+#message:empty{display:none;}
+#message{border:none!important;background:#fff4f4;color:var(--danger);
+    border-radius:8px;width:auto!important;height:auto!important;line-height:1.4!important;
+    padding:8px 12px;margin:14px 0 0;font-size:13px;text-align:center;}
+#loginTable{margin:14px auto 0;border-spacing:0 12px;width:100%;}
+#loginTable td{padding:2px 4px;}
+#loginTable td:first-child{color:var(--muted);font-size:14px;white-space:nowrap;text-align:right;}
+#loginTable input[type=text],#loginTable input[type=password]{min-width:180px;}
+#imgShow{border-radius:8px;border:1px solid var(--line);vertical-align:middle;cursor:pointer;}
+.btn{background:linear-gradient(135deg,var(--primary),var(--primary-dark))!important;
+    border-radius:9px!important;font-size:15px!important;color:#fff!important;
+    padding:8px 22px;display:inline-block;box-shadow:0 6px 14px rgba(79,110,247,.30);}
+.btn.btn-primary{background:#eef1f6!important;color:#41495a!important;box-shadow:none;}
+
+/* ============================================================
+   主页 main.jsp
+   ============================================================ */
+#mainDiv{
+    width:1000px;max-width:96%;border:none;border-radius:var(--radius);
+    margin:26px auto;overflow:hidden;background:var(--card);box-shadow:var(--shadow);
+}
+#header{
+    height:58px;line-height:58px;color:#fff;font-size:20px;font-weight:700;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+}
+#logoDiv{margin-left:26px;letter-spacing:.03em;}
+#userDiv{margin-right:26px;font-size:14px;font-weight:500;}
+#userDiv::before{content:"\1F464";margin-right:6px;}
+#welcomeDiv{height:46px;line-height:46px;border-bottom:1px solid var(--line);
+    color:var(--muted);font-size:15px;background:#fafbff;}
+#contentDiv{height:472px;border:none;display:flex;}
+#content-left{width:186px;height:472px;background:#fafbff;border-right:1px solid var(--line);padding-top:8px;}
+#content-left ul{padding:0;margin:0;}
+.menu{color:var(--ink);font-size:15px;font-weight:700;margin:16px 0 4px 18px;}
+.menu>span{cursor:pointer;display:inline-block;padding:4px 0;}
+.menu>span::before{content:"\25B8";color:var(--primary);margin-right:6px;font-size:12px;}
+.menu-sub{color:#51586a;font-size:14px;font-weight:500;height:38px;line-height:38px;
+    margin:2px 10px 2px 14px;padding-left:20px;border-radius:9px;transition:.15s;}
+.menu-sub:hover{background:var(--primary-light);cursor:pointer;}
+.menu-sub a{display:block;color:#51586a;}
+.menu-sub:hover a{color:var(--primary-dark);}
+#content-right{flex:1;border:none;background:#f4f6fb;}
+#content-right iframe{width:100%!important;height:472px!important;background:#f4f6fb;}
+#footer{height:44px;line-height:44px;font-size:12px;color:var(--muted);text-align:center;background:#fafbff;}
+
+/* ============================================================
+   列表页 dept/list.jsp · emp/list.jsp
+   ============================================================ */
+h1.title{
+    font-size:15px!important;color:#33415c!important;font-weight:600!important;
+    background:linear-gradient(90deg,#e8edff,#f3f6ff)!important;
+    line-height:44px!important;height:44px!important;margin:0;padding:0 22px;
+    border-bottom:1px solid var(--line);letter-spacing:.02em;
+}
+.add{position:static!important;margin:18px 0 0 26px!important;font-size:14px;}
+.add a{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:#fff!important;padding:9px 18px;border-radius:9px;font-weight:600;box-shadow:0 6px 14px rgba(79,110,247,.30);}
+.add a:hover{filter:brightness(1.06);}
+.add img{vertical-align:middle;margin:0;}
+
+.deptInfo{
+    width:auto;min-width:88%;margin:22px auto 30px;border-collapse:separate;border-spacing:0;
+    background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--line);
+}
+.deptInfo tr{height:auto;line-height:1.5;text-align:center;}
+.deptInfo tr td{border:none;border-bottom:1px solid var(--line);padding:13px 16px;white-space:nowrap;font-size:14px;}
+.deptInfo .titleRow{background:linear-gradient(135deg,#eef2ff,#e6ecff)!important;}
+.titleRow td{color:#3a4667;font-weight:700!important;font-size:14px!important;border-bottom:2px solid #d7def7!important;}
+.deptInfo tr:not(.titleRow):hover td{background:#f7f9ff;}
+.deptInfo tr:last-child td{border-bottom:none;}
+.operateImg{width:20px;height:20px;vertical-align:middle;margin:0 3px;cursor:pointer;transition:.15s;border-radius:4px;}
+.operateImg:hover{transform:scale(1.18);}
+
+/* 分页 */
+.deptInfo tr td[colspan] a{margin:0 4px;color:var(--primary);font-weight:500;}
+.pagination{list-style:none;display:inline-flex;gap:6px;padding:0;margin:6px 0 0;justify-content:center;}
+.pagination .page-item{display:inline-block;}
+.pagination .page-link{display:inline-block;min-width:34px;padding:6px 10px;border-radius:8px;
+    border:1px solid var(--line);color:var(--primary);background:#fff;font-size:13px;text-align:center;}
+.pagination .page-item.active .page-link{background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:#fff;border-color:transparent;}
+
+/* ============================================================
+   表单页 add.jsp / modify.jsp （#deptEditTable / #empEditTable）
+   ============================================================ */
+body>h1{font-size:22px;color:var(--ink);text-align:center;margin:34px 0 4px;font-weight:700;}
+#deptEditTable,#empEditTable{
+    width:440px!important;max-width:92%;margin:16px auto 30px!important;border-collapse:separate;border-spacing:0;
+    background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:14px 26px 24px;
+}
+#deptEditTable td,#empEditTable td{height:auto!important;padding:11px 8px!important;vertical-align:middle;}
+#deptEditTable tr td:first-child,#empEditTable tr td:first-child{
+    color:var(--muted);font-size:14px;white-space:nowrap;width:96px;text-align:right;padding-right:14px!important;font-weight:500;
+}
+#deptEditTable input[type=submit],#empEditTable input[type=submit]{margin-right:8px;}
+#deptEditTable a,#empEditTable a{margin-left:8px;}
+#deptEditTable tr:last-child td,#empEditTable tr:last-child td{padding-top:18px!important;}
+
+/* ============================================================
+   详情页 detail.jsp （Bootstrap table 兜底样式）
+   ============================================================ */
+body>h1:first-of-type{margin-bottom:16px;}
+table.table{width:560px;max-width:92%;margin:20px auto;border-collapse:separate;border-spacing:0;
+    background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--line);font-size:14px;}
+table.table th,table.table td{padding:12px 18px;border:none;border-bottom:1px solid var(--line);text-align:left;}
+table.table thead th{background:linear-gradient(135deg,#eef2ff,#e6ecff);color:#3a4667;font-weight:700;}
+table.table tbody tr:hover td{background:#f7f9ff;}
+table.table tbody td:first-child{color:var(--muted);width:130px;font-weight:500;}
+table.table tr:last-child td{border-bottom:none;}
+/* 详情/返回按钮容器 */
+body>a>input[type=button]{margin:0 auto;display:block;}

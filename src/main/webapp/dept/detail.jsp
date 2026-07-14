@@ -33,6 +33,7 @@
     <title>部门明细</title>
 
 
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/app.css">
 </head>
 
 <body>

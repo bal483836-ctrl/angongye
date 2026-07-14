@@ -32,6 +32,7 @@
         }
         #empEditTable td{ height: 40px; }
     </style>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/app.css">
 </head>
 
 <body>

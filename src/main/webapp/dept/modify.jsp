@@ -52,6 +52,7 @@
         }
 
     </style>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/app.css">
 </head>
 
 <body>

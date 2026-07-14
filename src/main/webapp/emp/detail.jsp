@@ -21,6 +21,7 @@
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <title>员工明细</title>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/app.css">
 </head>
 
 <body>
