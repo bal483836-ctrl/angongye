@@ -1,9 +1,9 @@
 package com.angongye.service.impl;
 
+import com.angongye.dao.EmployeeDao;
+import com.angongye.dao.LoginDao;
 import com.angongye.entity.Emp;
 import com.angongye.entity.Login;
-import com.angongye.mapper.EmpMapper;
-import com.angongye.mapper.LoginMapper;
 import com.angongye.module.MyResponse;
 import com.angongye.service.LoginService;
 import com.angongye.utils.MD5Util;
@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class LoginServiceImpl implements LoginService {
     @Autowired
-    LoginMapper loginMapper;
+    LoginDao loginDao;
     @Autowired
-    EmpMapper empMapper;
+    EmployeeDao employeeDao;
 
     @Override //登录的业务逻辑
     public MyResponse login(Login loginTemp) {
@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
         //判断用户名与密码.loginTemp(明文的密码)，数据库（加密后的密文）
         // 明文加密后进行比较 md5To32String("123456知道","bbbb-数据库",3-数据库中)
         // (1) 通过用户名获得该账户其他信息，（用户名 唯一的）
-        Login searchResult = loginMapper.getLoginByName(loginTemp.getLoginName());
+        Login searchResult = loginDao.selectByName(loginTemp.getLoginName());
         //先看是否已经查到结果
         if(searchResult==null || searchResult.getLoginId()==null){
             //没有对应的账号信息，
@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
                     }
                 }
                 // 保存到数据库
-                loginMapper.updateStatusAndErrorById(searchResult);
+                loginDao.updateStatusAndErrorById(searchResult);
 
             }
 
@@ -75,7 +75,7 @@ public class LoginServiceImpl implements LoginService {
         // 先判断该账户是否已经存在，通过账号直接查询
 
 
-        Login isExists = loginMapper.getLoginByName(userName);
+        Login isExists = loginDao.selectByName(userName);
         if(isExists==null || isExists.getLoginId()==null){
             //账号不存在，可以注册,
             //（1）获得随机字符串作为“盐”，与对应的随机数索引==>加密密码
@@ -89,13 +89,13 @@ public class LoginServiceImpl implements LoginService {
                     .setLoginPwd(newPwd)
                     .setLoginSalt(salt)
                     .setLoginIndex(index);
-            int count = loginMapper.saveBackId(login);//一行受影响
+            int count = loginDao.save(login);//一行受影响
             if(count==1){
                 //添加成功,修改emp
                 Emp emp = new Emp();
                 emp.setEmpId(empId)
                         .setEmpLoginId(login.getLoginId());
-                count = empMapper.updateLoginIdByEmpId(emp);
+                count = employeeDao.updateLoginId(emp);
                 if(count==1){
                     //两次的对数据库的操作成功
                     result.setSuccess(true);

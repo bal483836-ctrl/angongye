@@ -3,7 +3,7 @@ package com.angongye.controller;
 import com.angongye.entity.Emp;
 import com.angongye.entity.Login;
 import com.angongye.module.MyResponse;
-import com.angongye.service.EmpService;
+import com.angongye.service.HrmService;
 import com.angongye.service.LoginService;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
@@ -29,7 +29,7 @@ public class LoginController {
     @Autowired
     LoginService loginService;
     @Autowired
-    EmpService empService;//员工的业务逻辑
+    HrmService hrmService;//员工的业务逻辑（门面）
 
     //验证登录
     // /login/login.do
@@ -63,7 +63,7 @@ public class LoginController {
                 request.getSession().setAttribute("login",login1);//保存登录信息
                 //获得员工信息
 
-                Emp emp1 = empService.getEmpByLoginId(login1.getLoginId());
+                Emp emp1 = hrmService.findEmployeeByLoginId(login1.getLoginId());
                 request.setAttribute("emp",emp1);//把数据保存到request中，
                 // request.getAttribute("emp");  // 如果从request获得数据，需要强转
                 //跳转到登录页面 "配置的前缀"+main+"配置的后缀"  ==>   /main.jsp
@@ -106,7 +106,7 @@ public class LoginController {
     public String gotoRegister(HttpServletRequest request){
         log.info("=============LoginController=============gotoRegister=======================");
        //读取数据（没有登录账号的员工信息）
-        List<Emp> list = empService.getEmpNoLoginNo();
+        List<Emp> list = hrmService.findEmployeesWithoutAccount();
         //如果有员工还没有登录账号，可以跳转到注册页面，
         // 如果所有员工都有登录账号，跳转到登录页面
         if(list==null || list.size()==0){

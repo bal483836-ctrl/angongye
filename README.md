@@ -22,19 +22,20 @@
 
 按教材要求，持久层采用 **DAO 组件 + 业务门面** 结构，个人作业选取 **部门、员工两个 DAO** 实现：
 
-- **DAO 组件**（`com.angongye.dao`）：`DeptDao`、`EmployeeDao`。使用 MyBatis **注解式**映射
-  （`@Select` / `@Delete` 写静态 SQL；`@InsertProvider` / `@UpdateProvider` 配合
-  `com.angongye.dao.provider` 下的 `DeptDynaSqlProvider`、`EmployeeDynaSqlProvider`，
-  用 `org.apache.ibatis.jdbc.SQL` 构建器**动态拼接** SQL）。
+- **DAO 组件**（`com.angongye.dao`）：`DeptDao`、`EmployeeDao`（外加支撑登录的 `LoginDao`）。
+  全部使用 MyBatis **注解式**映射（`@Select` / `@Insert` / `@Update` / `@Delete` 写静态 SQL；
+  `@InsertProvider` / `@UpdateProvider` 配合 `com.angongye.dao.provider` 下的
+  `DeptDynaSqlProvider`、`EmployeeDynaSqlProvider`，用 `org.apache.ibatis.jdbc.SQL` 构建器**动态拼接** SQL）。
 - **公共常量类** `com.angongye.util.common.HrmConstants`：集中管理表名等常量。
 - **业务门面** `com.angongye.service.HrmService`（实现类 `HrmServiceImpl`）：作为**唯一的业务逻辑组件**，
   门面式封装上述 DAO，向上提供 `findAllDept`、`findDeptById`、`addDept`、`modifyDept`、`removeDept`、
   `findAllEmployee`、`findEmployeeById`、`addEmployee`、`modifyEmployee`、`removeEmployee` 等业务方法
   （编号唯一校验、"部门下有员工不可删除"等业务规则都在此实现）。
 
-> 调用链：`Controller → HrmService（门面） → DeptDao / EmployeeDao（DAO） → 数据库`。
-> `DeptDao` 与 `EmployeeDao` 通过 `applicationContext.xml` 里 `MapperScannerConfigurer`
-> 的 `basePackage="com.angongye.mapper,com.angongye.dao"` 一并被 Spring 扫描为 DAO 代理对象。
+> 调用链：`Controller → HrmService（门面） → DeptDao / EmployeeDao / LoginDao（DAO） → 数据库`。
+> 持久层**只保留 DAO 注解式实现**（已移除早期的 `mapper` XML 写法）；
+> DAO 接口通过 `applicationContext.xml` 里 `MapperScannerConfigurer` 的
+> `basePackage="com.angongye.dao"` 被 Spring 扫描为 DAO 代理对象。
 
 ## 二、快速开始（导入 IDEA 后运行）
 
@@ -99,9 +100,8 @@ src/main/java/com/angongye
 ├── controller          # DeptController / EmpController / LoginController
 ├── service             # 业务接口（含门面 HrmService）
 │   └── impl            # 业务实现（含 HrmServiceImpl 门面实现）
-├── dao                 # ★第14章 DAO 组件：DeptDao / EmployeeDao（注解式）
+├── dao                 # ★第14章 DAO 组件：DeptDao / EmployeeDao / LoginDao（注解式）
 │   └── provider        # ★动态 SQL 提供类：DeptDynaSqlProvider / EmployeeDynaSqlProvider
-├── mapper              # 早期 MyBatis Mapper 接口 + XML（Login 等仍在使用）
 ├── entity              # 实体类 Dept / Emp / Login
 ├── module              # 通用响应对象 MyResponse
 ├── util/common         # ★HrmConstants 公共常量类
@@ -111,5 +111,5 @@ src/main/resources      # applicationContext.xml / springmvc-config.xml / mybati
 src/main/webapp         # dept、emp 管理页面，login/main/register 页面，css/js/img
 ```
 
-> 说明：`dao` 包是本次按教材新增的 DAO 门面架构（部门、员工两张表）；
-> `mapper` 包是项目早期的写法，登录模块仍在使用，两者可并存。
+> 说明：持久层已统一为 `dao` 注解式写法，早期的 `mapper` XML 包已移除。
+> `service` 下保留业务门面 `HrmService`（部门/员工）与 `LoginService`（登录/注册加密逻辑）。

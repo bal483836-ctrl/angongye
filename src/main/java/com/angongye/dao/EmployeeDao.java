@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
@@ -56,4 +57,17 @@ public interface EmployeeDao {
     // 动态修改员工
     @UpdateProvider(type = EmployeeDynaSqlProvider.class, method = "updateEmp")
     int update(Emp emp);
+
+    // ===== 登录 / 注册模块需要的员工数据访问 =====
+    // 根据登录账号 id 查询员工（登录成功后展示员工姓名）
+    @Select("select * from " + EMPLOYEETABLE + " where emp_login_id = #{id}")
+    Emp selectByLoginId(int id);
+
+    // 查询还没有登录账号的员工（注册页面下拉选择）
+    @Select("select * from " + EMPLOYEETABLE + " where emp_login_id is null")
+    List<Emp> selectNoLoginEmp();
+
+    // 注册成功后，为员工绑定登录账号 id
+    @Update("update " + EMPLOYEETABLE + " set emp_login_id = #{empLoginId} where emp_id = #{empId}")
+    int updateLoginId(Emp emp);
 }

@@ -164,4 +164,17 @@ public class HrmServiceImpl implements HrmService {
         }
         return result;
     }
+
+    // ===== 登录 / 注册模块需要的员工查询 =====
+    @Override
+    public Emp findEmployeeByLoginId(int loginId) {
+        log.info("=========HrmServiceImpl=========findEmployeeByLoginId=========");
+        return employeeDao.selectByLoginId(loginId);
+    }
+
+    @Override
+    public List<Emp> findEmployeesWithoutAccount() {
+        log.info("=========HrmServiceImpl=========findEmployeesWithoutAccount=========");
+        return employeeDao.selectNoLoginEmp();
+    }
 }

@@ -27,4 +27,8 @@ public interface HrmService {
     MyResponse addEmployee(Emp emp);     // 新增员工（校验编号唯一）
     MyResponse modifyEmployee(Emp emp);  // 修改员工（校验编号唯一）
     MyResponse removeEmployee(int id);   // 删除员工
+
+    // ===== 登录 / 注册模块需要的员工查询 =====
+    Emp findEmployeeByLoginId(int loginId);        // 根据登录账号 id 查询员工
+    List<Emp> findEmployeesWithoutAccount();       // 查询尚无登录账号的员工
 }

@@ -8,6 +8,7 @@ public class HrmConstants {
     // 数据库表常量
     public static final String DEPTTABLE = "t_dept";      // 部门表
     public static final String EMPLOYEETABLE = "t_emp";   // 员工表
+    public static final String LOGINTABLE = "t_login";    // 登录账号表
 
     // 默认每页条数
     public static final int PAGE_DEFAULT_SIZE = 4;
